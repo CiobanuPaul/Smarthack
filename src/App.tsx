@@ -1,34 +1,26 @@
-import { useState } from 'react'
-import './App.css'
-
-
-
+import React from 'react';
+import logo from './logo.svg';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   return (
-    <>
-      
-      <h2>Login Page</h2>
-      
-       
-        <a>Email: </a>
-        <input onChange={(e) => setEmail(e.target.value)}></input>
-        <br></br>
-        <a>Password: </a>
-        <input onChange={(e) => setPassword(e.target.value)}></input>
-        <br></br>
-        <button>Sign In</button>
-        <p>I don't have an account</p>
-        
-     
-    </>
-  )
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.tsx</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+  );
 }
 
-export default App
-
-//fhgjgjhjhvjgjhvhj
-//Pentru al doilea push --Ciobanu Paul
+export default App;
