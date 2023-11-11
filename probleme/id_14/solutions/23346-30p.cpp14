@@ -1,0 +1,75 @@
+#include <algorithm>
+#include <iostream>
+#include <fstream>
+#include <utility>
+#include <vector>
+#include <set>
+
+#define all(v) v.begin(), v.end()
+#define len(v) (int)v.size()
+
+using ll = long long;
+
+struct jobs {
+    int l, d, idx;
+    bool operator < (const jobs& e) const {
+        return this->d < e.d;
+    }
+};
+
+int main() {
+
+    std::ifstream fin("bolovani.in");
+    int n; fin >> n;
+    std::vector <jobs> v(n), tmp(n);
+    for (int i = 0; i < n; ++i) {
+        fin >> v[i].l >> v[i].d;
+        v[i].idx = i;
+        tmp[i] = v[i];
+    }
+    fin.close();
+
+    std::sort(all(v));
+    std::set <std::pair <int, int>> s;
+    std::vector <int> sch;
+    for (int i = n - 1; i >= 0; --i) {
+        int t = v[i].d - (i? v[i - 1].d : 0);
+        s.insert({v[i].l, v[i].idx});
+
+        while (t and !s.empty()) {
+            auto it = s.begin();
+            if (it-> first <= t) {
+                t -= it-> first;
+                sch.emplace_back(it-> second);
+            } else {
+                s.insert({it-> first - t, it-> second});
+                t = 0;
+            }
+            s.erase(it);
+        }
+    }
+
+    std::vector <std::pair <ll, ll>> res(n);
+    ll l = 1;
+    std::sort(all(sch), [tmp](int ia, int ib) {
+        return tmp[ia].d < tmp[ib].d;
+    });
+    for (int i = 0; i < len(sch); ++i) {
+       res[sch[i]] = std::make_pair(l, l + tmp[sch[i]].l - 1);
+       l += tmp[sch[i]].l;
+    }
+
+    std::ofstream fout("bolovani.out");
+    fout << len(sch) << "\n";
+    for (int i = 0; i < n; ++i) {
+        if (res[i].first == 0) {
+            res[i] = std::make_pair(l, l + tmp[i].l - 1);
+            l += tmp[i].l;
+        }
+
+        fout << res[i].first << " " << res[i].second << "\n";
+    }
+    fout.close();
+
+    return 0;
+}

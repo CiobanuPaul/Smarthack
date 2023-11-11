@@ -1,0 +1,93 @@
+using namespace std;
+#ifdef EZ
+   #include "./ez/ez.h"
+   const string FILE_NAME = "test";
+#else
+   #include <bits/stdc++.h>
+   const string FILE_NAME = "biom";
+#endif
+#define mp make_pair
+#define mt make_tuple
+#define ll long long
+#define pb push_back
+#define eb emplace_back
+#define fi first
+#define se second
+#define cin fin
+#define cout fout
+ifstream fin (FILE_NAME + ".in");
+ofstream fout (FILE_NAME + ".out");
+
+const int nMAX = 1e6;
+
+int n, a, b, c, d;
+char s[nMAX + 2];
+ll dp[nMAX + 1];
+int st[nMAX + 1];
+int dr[nMAX + 1];
+
+int main()
+{
+   cin >> n >> a >> b >> c >> d >> s+1;
+
+   // generam vectorul dr
+   vector<int> ap(256);
+   for (int i = n; i >= 1; --i)
+   {
+      dr[i] = ap[s[i]];
+      ap[s[i]] = i;
+   }
+   // generam vectorul st
+   fill(ap.begin(), ap.end(), 0);
+   for (int i = 1; i <= n; ++i)
+   {
+      st[i] = ap[s[i]];
+      ap[s[i]] = i;
+   }
+
+   struct idk {
+      int i;   ll cost;
+      bool operator<(const idk &B) const
+         { return cost > B.cost; }
+   };
+   fill(dp + 1, dp + n+1, LLONG_MAX>>1);
+   dp[1] = 0;
+
+   priority_queue<idk> pq;
+   pq.push({1, 0});
+   while (!pq.empty())
+   {
+      int i = pq.top().i;
+      ll cost = pq.top().cost;
+      pq.pop();
+
+      if (cost != dp[i])
+         continue;
+
+      if (i != n && dp[i] + a < dp[i+1])
+      {
+         dp[i+1] = dp[i] + a;
+         pq.push({i+1, dp[i+1]});
+      }
+
+      if (i != 1 && dp[i] + b < dp[i-1])
+      {
+         dp[i-1] = dp[i] + b;
+         pq.push({i-1, dp[i-1]});
+      }
+
+      if (dr[i] && dp[i] + c < dp[dr[i]])
+      {
+         dp[dr[i]] = dp[i] + c;
+         pq.push({dr[i], dp[dr[i]]});
+      }
+
+      if (st[i] && dp[i] + d < dp[st[i]])
+      {
+         dp[st[i]] = dp[i] + d;
+         pq.push({st[i], dp[st[i]]});
+      }
+   }
+
+   cout << dp[n];
+}

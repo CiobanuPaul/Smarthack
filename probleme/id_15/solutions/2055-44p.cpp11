@@ -1,0 +1,40 @@
+#pragma GCC optimize ("unroll-loops","Ofast")
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main(){
+   ifstream cin("schema.in");
+    ofstream cout("schema.out");
+        std::random_device rd;
+    std::mt19937 g(rd());
+    int n,s;
+    cin >> n >> s;
+    vector<int> a(n);
+    for(auto&x:a)
+        cin >> x;
+            vector<int> p(n);
+    iota(p.begin(),p.end(),0);
+            auto solve=[&](){
+        int ans=s;
+        for(int i=0;i<n;++i)
+            if(ans>=a[p[i]])
+                ans-= a[p[i]];
+        return ans;
+    };
+    int ans=solve();
+        reverse(a.begin(),a.end());
+        ans=max(ans,solve());
+    sort(a.begin(),a.end());
+    ans=max(ans,solve());
+    reverse(a.begin(),a.end());
+        ans=max(ans,solve());
+    for(int i=0;i<=4000000/n;++i){
+    shuffle(p.begin(),p.end(),g);
+
+    ans=max(ans,solve());
+    }
+   cout << ans;
+
+
+}
