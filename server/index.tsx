@@ -1,6 +1,7 @@
 //oare va merge?
 import express, { Express, Request, Response } from "express";
 const crypto = require("crypto") 
+const path = require('path');
 const app: Express = express()
 const session = require("express-session");
 app.use(session({
@@ -62,7 +63,7 @@ app.get('/logout', function(req, res) {
 });
 
 app.get('/problems',function(req,res){
-  con.query('select nume from problem',function(err:any, result:any, fields:any) {
+  con.query('select id_pb,nume from problem',function(err:any, result:any, fields:any) {
     if (err) throw err;
     res.send(result);
   });
@@ -76,7 +77,7 @@ app.get('/tipuripb',function(req,res){
 }) 
 
 app.post('/pbanume',function(req,res){
-  con.query(`select c.nume, pb.difficulty from pb_cat pb, problem p,categorie c where pb.id_pb=p.id and pb.id_cat=c.id_cat and p.nume=${req.body.name}`, function (err:any, result:any, fields:any){
+  con.query(`select c.id_pb,c.nume, pb.difficulty from pb_cat pb, problem p,categorie c where pb.id_pb=p.id and pb.id_cat=c.id_cat and p.nume=${req.body.name}`, function (err:any, result:any, fields:any){
     if (err) throw err;
     res.send(result);
   })
@@ -93,6 +94,16 @@ app.post('/filter',function(req,res){
     if (err) throw err;
     res.send(result);
   })
+})
+
+app.get('/selectpb',function(req,res){
+  res.sendFile(`./probleme/id_${req.query.id}`);
+})
+app.get('/selectpb1',function(req,res){
+  const options = {
+    root: path.join(__dirname)
+};
+  res.sendFile(`/probleme/id_10/description.md`,options);
 })
 app.get("/stea", (req: Request, res: Response) => {
     con.query("SELECT * FROM employees where employee_id=102", function (err:any, result:any, fields:any) {
