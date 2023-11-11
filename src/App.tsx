@@ -1,34 +1,29 @@
 import { useState } from 'react'
 import './App.css'
+import Login from './Login.tsx'
 
-
-
+type page = 'Home' | 'Problems';
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  return (
-    <>
+  const [actualPage, setActualPage] = useState<page>('Home')
+  const [loggedIn, setLoggedIn] = useState<boolean>(true)
+    if(!loggedIn){
       
-      <h2>Login Page</h2>
-      
-       
-        <a>Email: </a>
-        <input onChange={(e) => setEmail(e.target.value)}></input>
-        <br></br>
-        <a>Password: </a>
-        <input onChange={(e) => setPassword(e.target.value)}></input>
-        <br></br>
-        <button>Sign In</button>
-        <p>I don't have an account</p>
-        
-     
-    </>
-  )
+      return <Login />
+    }
+    else {
+      if(actualPage === 'Home'){
+        return (
+          <div className="nav">
+          <a onClick={() => setActualPage('Home')}>Home </a>
+          <a onClick={() => setActualPage('Problems')}>Problems </a>
+          </div>
+          
+        )
+      }
+    }
+    
 }
 
 export default App
 
-//fhgjgjhjhvjgjhvhj
-//Pentru al doilea push --Ciobanu Paul
