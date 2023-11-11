@@ -1,17 +1,28 @@
 import { useState } from 'react'
 import './App.css'
-
 import Home from './Home.tsx'
 import Problems from './Problems.tsx'
 export type page = 'Home' | 'Problems' | 'Login' | 'Create Account';
 
+function SignIn( nume: string, prenume: string, email: string, parola: string){
+       fetch('http://localhost:3001/signin/', {
+        method: 'POST',
+        body: JSON.stringify({
+          nume: {nume},
+          prenume: {prenume},
+          email: {email},
+          parola: {parola}
+        })
+      }).then()
+    
+}
 
 function App() {
   const [actualPage, setActualPage] = useState<page>('Login')
-  const [count, setCount] = useState(0)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  
+  const [nume, setNume] = useState('')
+  const [prenume, setPrenume] = useState('')
     if(actualPage === 'Login'){
       return (
         <>
@@ -24,8 +35,6 @@ function App() {
           <br></br>
           <button>Log In</button>
           <p onClick = {() => setActualPage('Create Account')}>I don't have an account</p>
-          
-       
       </>
       )
     }
@@ -33,13 +42,20 @@ function App() {
       return (
         <>
         <h2>Create Account</h2> 
+        <a>Nume: </a>
+        <input onChange={(e) => setNume(e.target.value)}></input>
+        <br></br>
+        <a>Prenume: </a>
+        <input onChange={(e) => setPrenume(e.target.value)}></input>
+        <br></br>
         <a>Email: </a>
         <input onChange={(e) => setEmail(e.target.value)}></input>
         <br></br>
         <a>Password: </a>
         <input onChange={(e) => setPassword(e.target.value)}></input>
         <br></br>
-        <button>Sign Up</button>
+
+        <button onClick = {() => {SignIn(nume, prenume, email, password), setActualPage('Home')}}>Sign Up</button>
 
     </>
       )
@@ -59,9 +75,7 @@ function App() {
     
 }
 
-function SignUp(): any {
-    
-}
+
 
 
 export default App

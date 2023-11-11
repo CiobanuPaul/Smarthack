@@ -86,7 +86,6 @@ type box = {
 const max_box_number = 10
 let c_box_id_counter = 0
 
-
 const init_box = (memory: Number): box => {//TODO: more error handeling 
     c_box_id_counter %= max_box_number
     let isolate = child_process.spawnSync(path_isolate.toString(), ["--cfg", '--box-id=' + c_box_id_counter, '--init'])
