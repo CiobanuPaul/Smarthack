@@ -5,6 +5,7 @@ create table users(
     nume varchar(25),
     prenune varchar(25),
     email varchar(50),
+    pass varchar(50), 
     data_inscriere date,
     constraint usr_pk primary key(id_user)
 );
