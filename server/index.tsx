@@ -3,9 +3,10 @@ import express, { Express, Request, Response } from "express";
 const crypto = require("crypto") 
 const app: Express = express()
 const session = require("express-session");
-app.use(session({secret: 'abcdefg', 
-                resave: true, 
-                Uninitialized: false 
+app.use(session({
+  secret: "The quick brown fox jumps over the lazy dog",
+  resave: true,
+  saveUninitialized: true
 }));
 let gc: Number = 0;
 
@@ -29,7 +30,7 @@ con.connect(function(err:any) {
   });
   
 app.get('/', (req: Request, res: Response) => {
-    res.send("Hello Hell!")
+    res.redirect("/index.html")
 });
 app.post('/signin',(req: Request, res: Response)=>{
   let password:any = crypto.createHash(algorithm).update(req.body.password).digest("base64") 
@@ -59,6 +60,13 @@ app.get('/logout', function(req, res) {
   session.destroy(); 
   res.send();   
 });
+
+app.get('/problems',function(req,res){
+  con.query('select nume from problem',function(err:any, result:any, fields:any) {
+    if (err) throw err;
+    res.send(result);
+  });
+})
 app.get("/stea", (req: Request, res: Response) => {
     con.query("SELECT * FROM employees where employee_id=102", function (err:any, result:any, fields:any) {
         if (err) throw err;
