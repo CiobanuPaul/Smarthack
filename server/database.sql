@@ -3,7 +3,7 @@ use smarthack;
 create table users(
     id_user DECIMAL(5),
     nume varchar(25),
-    prenune varchar(25),
+    prenume varchar(25),
     email varchar(50),
     pass varchar(50), 
     data_inscriere date,
