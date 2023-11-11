@@ -72,6 +72,7 @@ type box = {
 const max_box_number = 10
 let c_box_id_counter = 0
 
+
 const init_box = (memory: Number): box => {//TODO: more error handeling 
     c_box_id_counter %= max_box_number
     let isolate = child_process.spawnSync(path_isolate.toString(), ["--cfg", '--box-id=' + c_box_id_counter, '--init'])
@@ -81,4 +82,29 @@ const init_box = (memory: Number): box => {//TODO: more error handeling
         return init_box(memory)
     }
     return { id: c_box_id_counter++, log: '', memory: memory, path: isolate.output.toString().trim() }
+}
+
+const delete_box = (b: box) => {
+    child_process.spawnSync(path_isolate.toString(), ["--cfg", '--box-id=' + b.id, '--cleanup'])
+}
+
+type restrictions = {
+    time: Number
+    memory: Number
+}
+
+const parse_grader = (str: String): restrictions => {
+    let res = { time: 0, memory: 0 }
+    for (let i in str.split('\n')) {
+        let tok = i.split('=')
+        if (tok[0] == 'time')
+            res.time = Number(tok[1])
+        else if (tok[0] == 'memory')
+            res.memory = Number(tok[1])
+    }
+    return res
+}
+
+const grade_test = () => {
+    
 }
