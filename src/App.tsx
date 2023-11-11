@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import './App.css'
 import Login from './Login.tsx'
-
+import Home from './Home.tsx'
+import Problems from './Problems.tsx'
 type page = 'Home' | 'Problems';
+
 
 function App() {
   const [actualPage, setActualPage] = useState<page>('Home')
@@ -12,15 +14,15 @@ function App() {
       return <Login />
     }
     else {
-      if(actualPage === 'Home'){
         return (
+          <>
           <div className="nav">
-          <a onClick={() => setActualPage('Home')}>Home </a>
-          <a onClick={() => setActualPage('Problems')}>Problems </a>
+            <a onClick={() => setActualPage('Home')}>Home </a>
+            <a onClick={() => setActualPage('Problems')}>Problems </a>
           </div>
-          
+          {actualPage === 'Home' ? <Home /> : <Problems/>}
+          </>
         )
-      }
     }
     
 }
