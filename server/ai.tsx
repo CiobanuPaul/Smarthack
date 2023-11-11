@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import * as fs from 'fs';
 
 const openai:OpenAI = new OpenAI({apiKey: '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'})//process.env.OPENAI_API_KEY});
 
@@ -33,6 +34,29 @@ async function characterize(code : string){
   })
   console.log(completion.choices[0])
 }
+
+
+// Function to read file content and return it as a string
+function readFileToString(filePath: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf-8', (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+}
+
+const filePath = '/home/cartofiprajiti/Alte proiecte/template_smarthack/server/probleme/id_10/solutions/23336-100p.cpp14'; 
+readFileToString(filePath)
+  .then((fileContent) => {
+    console.log('File content:', fileContent);
+  })
+  .catch((error) => {
+    console.error('Error reading file:', error);
+  });
 
 // main();
 characterize('#include <iostream>\nusing namespace std;\nint main(){\n  cout<<"Hello world!";//This prints the message "Hello World!"\n   return 0;\n}');
