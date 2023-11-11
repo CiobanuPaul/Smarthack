@@ -35,7 +35,7 @@ const cpp_eval = (problem, code) => {
     // gpp.on("exit", (code: Number, signal: String) => {
     //     res.compiler_exit_code = code
     // })
-    let gpp = child_process_1.default.spawnSync('g++', [path_to_eval_folder + "main.cpp", '-o', path_to_eval_folder + 'exec'], {
+    let gpp = child_process_1.default.spawnSync('g++', [path_to_eval_folder + "main.cpp", '-o', 'exec'], {
         timeout: 5 * 1000
     });
     if (gpp.status != null)
@@ -45,7 +45,7 @@ const cpp_eval = (problem, code) => {
     res.compiler_stdout = " " + gpp.stdout + '\n' + gpp.stderr;
     return res;
 };
-const eval_exec = (executeable, b) => {
+const eval_exec = () => {
 };
 const max_box_number = 10;
 let c_box_id_counter = 0;
