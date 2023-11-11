@@ -1,6 +1,6 @@
 //oare va merge?
 import express, { Express, Request, Response } from "express";
-const crypto = require("crypto") 
+const bcrypt = require("bcrypt") 
 const path = require('path');
 const app: Express = express()
 const session = require("express-session");
@@ -14,8 +14,6 @@ let gc: Number = 0;
 
 var dotenv=require('dotenv')
 dotenv.config()
-
-let algorithm = "sha256"
 
 var mysql = require('mysql');
 
@@ -34,7 +32,7 @@ app.get('/', (req: Request, res: Response) => {
     res.send("hello")
 });
 app.post('/signin',(req: Request, res: Response)=>{
-  let password:any = crypto.createHash(algorithm).update(req.body.password).digest("base64") 
+  let password = bcrypt.hash(req.body.password, 8) 
   con.query('UPDATE sequence_users SET id=LAST_INSERT_ID(id+1)')
   con.query(`insert into users values(select id from sequence_users),${req.body.nume},${req.body.prenume},${req.body.email},now(),${password}`,function(err:any,result:any){
     if (err) throw err;
@@ -43,7 +41,7 @@ app.post('/signin',(req: Request, res: Response)=>{
 
 })
 app.post('/login',(req: Request, res: Response) => {
-  let password:any = crypto.createHash(algorithm).update(req.body.password).digest("base64") 
+  let password:any =  bcrypt.hash(req.body.password, 8) 
   let username = req.body.email
 con.query(`SELECT id_user,pass, nume, prenume FROM users where email=${req.body.email}`, function (err:any, result:any, fields:any) {
     if(result.pass==password){
