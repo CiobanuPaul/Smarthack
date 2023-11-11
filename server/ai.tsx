@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import * as fs from 'fs';
 
 const openai:OpenAI = new OpenAI({apiKey: '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'})//process.env.OPENAI_API_KEY});
 
@@ -27,12 +28,35 @@ async function characterize(code : string){
   const completion = await openai.chat.completions.create({
     messages: [{role: "system", content: 'Give me a JSON string containg an object of this format: '
     +'{"complexity": 4,"math": 3,"sorting": 5,"dynamic_programming": 2, "graphs": 4, "trees": 3, "ranges": 1, "geometry": 3, "ai": 3, "statistics": 3} '
-    +"But replace the numbers with your ratings from 1 to 100 by evaluating how much the following code belongs to the respective category. Here is the code:\n"
+    +"But replace the numbers with your ratings from 1 to 10 by evaluating how much the following code belongs to the respective category. Here is the code:\n"
       +code}],
     model: "gpt-3.5-turbo",
   })
   console.log(completion.choices[0])
 }
 
+
+
+function readFileToString(filePath: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf-8', (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+}
+
+const filePath = '/home/cartofiprajiti/Alte proiecte/template_smarthack/server/probleme/id_15/solutions/2052-100p.cpp11'
+if(0)
+  readFileToString(filePath)
+    .then((fileContent) => {
+      characterize(fileContent);
+    })
+    .catch((error) => {
+      console.error('Error reading file:', error);
+    });
 // main();
-characterize('#include <iostream>\nusing namespace std;\nint main(){\n  cout<<"Hello world!";//This prints the message "Hello World!"\n   return 0;\n}');
+// characterize('#include <iostream>\nusing namespace std;\nint main(){\n  cout<<"Hello world!";//This prints the message "Hello World!"\n   return 0;\n}');
