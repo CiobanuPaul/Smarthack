@@ -1,5 +1,6 @@
 //oare va merge?
 import express, { Express, Request, Response } from "express";
+const cors = require('cors')
 const crypto = require("crypto") 
 const app: Express = express()
 const session = require("express-session");
@@ -10,6 +11,13 @@ app.use(session({
 }));
 let gc: Number = 0;
 
+const originfix=(req:Request, res:Response, next:any) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
+}
 
 var dotenv=require('dotenv')
 dotenv.config()
@@ -29,20 +37,21 @@ con.connect(function(err:any) {
     if (err) throw err;
   });
   
-app.get('/', (req: Request, res: Response) => {
+app.get('/',originfix, (req: Request, res: Response) => {
     res.redirect("/index.html")
 });
 app.post('/signin',(req: Request, res: Response)=>{
+  console.log(req);/*
   let password:any = crypto.createHash(algorithm).update(req.body.password).digest("base64") 
   con.query('UPDATE sequence_users SET id=LAST_INSERT_ID(id+1)')
   con.query(`insert into users values(select id from sequence_users),${req.body.nume},${req.body.prenume},${req.body.email},now(),${password}`,function(err:any,result:any){
     if (err) throw err;
     res.send("Succes");
   })
-
 })
-app.post('/login',(req: Request, res: Response) => {
-  let password:any = crypto.createHash(algorithm).update(req.body.password).digest("base64") 
+app.post('/login',originfix,(req: Request, res: Response) => {
+  console.log(req);
+  /*let password:any = crypto.createHash(algorithm).update(req.body.password).digest("base64") 
   let username = req.body.email
 con.query(`SELECT id_user,pass, nume, prenume FROM users where email=${req.body.email}`, function (err:any, result:any, fields:any) {
     if(result.pass==password){
@@ -50,10 +59,10 @@ con.query(`SELECT id_user,pass, nume, prenume FROM users where email=${req.body.
       session.username = id;
       res.send(result.nume+" "+result.prenume)
     }else{
-      session.username = false;
+      session.username = false;*/
       res.send("error");
-    }
-});
+    //}
+//});
 });
 
 app.get('/logout', function(req, res) {    
