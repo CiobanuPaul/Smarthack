@@ -11,7 +11,7 @@ app.use(session({
   saveUninitialized: true
 }));
 let gc: Number = 0;
-
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 const originfix=(req:Request, res:Response, next:any) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -39,7 +39,7 @@ con.connect(function(err:any) {
 app.get('/', originfix, (req: Request, res: Response) => {
     res.send("hello")
 });
-app.post('/signin', originfix,(req: Request, res: Response)=>{
+app.post('/signin', originfix,urlencodedParser, (req: Request, res: Response)=>{
   console.log(req.body)
   let password = bcrypt.hash(req.body.password, 8) 
   con.query('UPDATE sequence_users SET id=LAST_INSERT_ID(id+1)')
@@ -49,7 +49,7 @@ app.post('/signin', originfix,(req: Request, res: Response)=>{
   })
 
 })
-app.post('/login',originfix, (req: Request, res: Response) => {
+app.post('/login',originfix,urlencodedParser,  (req: Request, res: Response) => {
   let password:any =  bcrypt.hash(req.body.password, 8) 
   let username = req.body.email
 con.query(`SELECT id_user,pass, nume, prenume FROM users where email=${req.body.email}`, function (err:any, result:any, fields:any) {
