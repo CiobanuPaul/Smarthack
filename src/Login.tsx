@@ -18,12 +18,13 @@ function Login() {
           <a>Password: </a>
           <input onChange={(e) => setPassword(e.target.value)}></input>
           <br></br>
-          <button>Sign In</button>
+          <button>Log In</button>
           <p>I don't have an account</p>
           
        
       </>
     )
 }
+
 
 export default Login
