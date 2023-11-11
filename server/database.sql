@@ -13,6 +13,7 @@ create table users(
 create table problem(
     id_pb DECIMAL(5),
     ptr_file varchar(25),
+    nume varchar(25),
     constraint pb_pk primary key(id_pb)
 );
 
