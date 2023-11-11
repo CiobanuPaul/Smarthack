@@ -1,0 +1,66 @@
+#include <bits/stdc++.h>
+using namespace std;
+ifstream f("schema.in");
+ofstream g("schema.out");
+// #define f cin
+// #define g cout
+int n, s, v[2003], pre[2003];
+int maxim;
+bool obtin(int, int);
+bitset<5002> bif2, bif;
+vector<int> vec;
+int main()
+{
+    vec.reserve(5009);
+    f >> n >> s;
+    for (int i = 1; i <= n; i++)
+        f >> v[i];
+    sort(v + 1, v + n + 1);
+    if (s < v[1])
+    {
+        g << s;
+        return 0;
+    }
+
+    bif2[0] = 1;
+    for (int i = 1; i <= n; i++)
+        bif2 |= (bif2 << v[i]);
+    for (int i = 0; i <= s; i++)
+        if (bif2[i])
+            vec.push_back(s - i);
+
+    for (auto val : vec)
+    {
+        int axs = s;
+        int ind = 0, r = 0;
+        for (int i = 1; i <= n; i++)
+            if (v[i] <= val)
+                if (axs >= v[i])
+                    axs -= v[i], ind = i, r += v[i];
+                else
+                    break;
+            else
+                break;
+        if (r > s || s - r < val)
+            continue;
+        if (!bif2[axs - val])
+            continue;
+        if (obtin(axs - val, ind + 1))
+        {
+            g << val;
+            return 0;
+        }
+    }
+    return 0;
+}
+bool obtin(int val, int poz)
+{
+    bif.reset();
+    bif[0] = 1;
+    for (int i = poz, nr; i <= n && !bif[val]; i++)
+    {
+        nr = v[i];
+        bif |= (bif << nr);
+    }
+    return bif[val];
+}
