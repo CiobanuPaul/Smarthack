@@ -1,0 +1,35 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+	ifstream cin("schema.in");
+	ofstream cout("schema.out");
+	int n, g, s = 0, ans = 0;
+	cin >> n >> g;
+	vector<int> a(n);
+	bitset<5001> dp;
+	dp[0] = 1;
+	for (auto& x : a)
+		cin >> x, s += x;
+	sort(a.begin(), a.end());
+	a.emplace_back(INT_MAX);
+	vector<int> sols;
+	for (int i = n - 1;; --i) {
+		for (int j = max(g - s - a[i + 1] + 1, 0); j <= g - s; ++j)
+			if (dp[j]) {
+				ans = max(ans, g - s - j);
+				if (!sols.empty() && g - s - j < sols.back()) {
+					cout << ans;
+					return 0;
+				}
+				sols.emplace_back(g - s - j);
+				break;
+			}
+		if (i == -1)
+			break;
+		s -= a[i];
+		dp |= dp << a[i];
+	}
+	cout << ans;
+}
