@@ -8,11 +8,13 @@ function SignIn( nume: string, prenume: string, email: string, parola: string){
        fetch('http://localhost:3001/signin/', {
         method: 'POST',
         body: JSON.stringify({
-          nume: {nume},
-          prenume: {prenume},
-          email: {email},
-          parola: {parola}
-        })
+          nume,
+          prenume,
+          email,
+          parola
+        }),headers: {
+          'Content-Type':'application/json'
+        }
       }).then()
     
 }
