@@ -1,25 +1,29 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+
+
+
 
 function App() {
   const [count, setCount] = useState(0)
-  let items = ["unu", "doi", "trei"]
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>My first React experiment</h1>
-      {items.map(item => (
-        <h3>Se va afisa: {item}</h3>
-      ))}
+      
+      <h2>Login Page</h2>
+      
+       
+        <a>Email: </a>
+        <input onChange={(e) => setEmail(e.target.value)}></input>
+        <br></br>
+        <a>Password: </a>
+        <input onChange={(e) => setPassword(e.target.value)}></input>
+        <br></br>
+        <button>Sign In</button>
+        <p>I don't have an account</p>
+        
+     
     </>
   )
 }
