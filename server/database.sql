@@ -1,6 +1,6 @@
 use smarthack;
 
-create table user(
+create table users(
     id_user DECIMAL(5),
     nume varchar(25),
     prenune varchar(25),
@@ -45,7 +45,7 @@ create table rulare(
     time date,
     nota_rulare DECIMAL(3),
     solution_ptr varchar(25), 
-    constraint rul_usr_fk foreign key(id_user) references user(id_user),
+    constraint rul_usr_fk foreign key(id_user) references users(id_user),
     constraint rul_pb_fk foreign key(id_pb) references problem(id_pb),
     constraint rul_pk primary key(id_rulare)
 );
@@ -55,7 +55,7 @@ create table noteAI(
     id_pb DECIMAL(5),
     id_req DECIMAL(5),
     nota DECIMAL(3),
-    constraint NAI_rul_fk foreign key(id_rul) references rulare(id_rul),
+    constraint NAI_rul_fk foreign key(id_rulare) references rulare(id_rulare),
     constraint NAI_pbreq_fk foreign key(id_pb,id_req) references AIReqs(id_pb,id_req),
-    constraint NAI_pk primary key(id_rulare,id_pb,pd_req)
+    constraint NAI_pk primary key(id_rulare,id_pb,id_req)
 );
