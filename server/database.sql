@@ -24,11 +24,9 @@ create table categorie(
 );
 
 create table AIReqs(
-    id_pb DECIMAL(5),
     id_req DECIMAL(5),
     nume varchar(25),
-    constraint AIR_pk primary key(id_pb,id_req),
-    constraint AIR_pb_fk foreign key(id_pb) references problem(id_pb)
+    constraint AIR_pk primary key(id_pb,id_req)
 );
 
 create table Pb_Cat(
@@ -54,10 +52,9 @@ create table rulare(
 
 create table noteAI(
     id_rulare DECIMAL(5),
-    id_pb DECIMAL(5),
     id_req DECIMAL(5),
     nota DECIMAL(3),
     constraint NAI_rul_fk foreign key(id_rulare) references rulare(id_rulare),
-    constraint NAI_pbreq_fk foreign key(id_pb,id_req) references AIReqs(id_pb,id_req),
-    constraint NAI_pk primary key(id_rulare,id_pb,id_req)
+    constraint NAI_pbreq_fk foreign key(id_pb,id_req) references AIReqs(id_req),
+    constraint NAI_pk primary key(id_rulare,id_req)
 );

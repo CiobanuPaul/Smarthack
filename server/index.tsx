@@ -30,7 +30,7 @@ con.connect(function(err:any) {
   });
   
 app.get('/', (req: Request, res: Response) => {
-    res.redirect("/index.html")
+    res.send("hello")
 });
 app.post('/signin',(req: Request, res: Response)=>{
   let password:any = crypto.createHash(algorithm).update(req.body.password).digest("base64") 
@@ -66,6 +66,33 @@ app.get('/problems',function(req,res){
     if (err) throw err;
     res.send(result);
   });
+}) 
+
+app.get('/tipuripb',function(req,res){
+  con.query('select nume from categorie',function(err:any, result:any, fields:any) {
+    if (err) throw err;
+    res.send(result);
+  });
+}) 
+
+app.post('/pbanume',function(req,res){
+  con.query(`select c.nume, pb.difficulty from pb_cat pb, problem p,categorie c where pb.id_pb=p.id and pb.id_cat=c.id_cat and p.nume=${req.body.name}`, function (err:any, result:any, fields:any){
+    if (err) throw err;
+    res.send(result);
+  })
+})
+
+app.post('/filter',function(req,res){
+  let str: String = ""
+  for(let i =0;i<10;i++){
+    if(req.body.filters[i]!=-1){
+      str+=" and " + " pc.id_cat = " +  req.body.filters[i];
+    }
+  }
+  con.query(`select p.nume from problem p, pb_cat pc where p.id_pb=pc.od_pb and exists (select p.nume from problem p1, pb_cat pc1 where p.id_pb=pc.od_pb and p.nume=p1.nume and ${str})`,function(err:any, result:any, fields:any){
+    if (err) throw err;
+    res.send(result);
+  })
 })
 app.get("/stea", (req: Request, res: Response) => {
     con.query("SELECT * FROM employees where employee_id=102", function (err:any, result:any, fields:any) {
