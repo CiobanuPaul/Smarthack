@@ -11,15 +11,17 @@ async function main() {
   console.log(completion.choices[0]);
 }
 
-async function evaluate(code : string){
+export default async function evaluate(code : string):Promise<String>{
   const completion = await openai.chat.completions.create({
-    messages: [{role: "system", content: "Give me a JSON string containg an array of 4 integers. "
+    messages: [{role: "system", content: "Give me a JSON string containg an array of 4 integers ( {\'result\':[score1, score2, score3, score4]} ). "
     +"Each integer represents your rating from 1 to 100 by evaluating the following criteria in this code: "
     +"1.Readability&Maintainability, 2.Explanation through comments, 3.Error Handling, 4.Good Practices. Here is the code:\n"
       +code}],
-    model: "gpt-3.5-turbo",
+    model: "gpt-3.5-turbo"
   })
-  console.log(completion.choices[0])
+  if(completion.choices[0].message.content)
+  return completion.choices[0].message.content.toString();
+throw "fuck open ai"
 }
 
 
