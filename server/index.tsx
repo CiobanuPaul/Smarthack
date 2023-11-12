@@ -122,7 +122,7 @@ app.post('/login', (req, ress) => {
 })
 
 app.get('/logout', function (req, res) {
-  con.query(`delete from session where token=${req.headers['authorization']}`)
+  if(req.headers['authorization'])con.query(`delete from session where token=${req.headers['authorization']}`)
   res.send();
 });
 
