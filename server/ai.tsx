@@ -35,4 +35,4 @@ async function characterize(code : string){
 }
 
 // main();
-characterize('#include <iostream>\nusing namespace std;\nint main(){\n  cout<<"Hello world!";//This prints the message "Hello World!"\n   return 0;\n}');
+// characterize('#include <iostream>\nusing namespace std;\nint main(){\n  cout<<"Hello world!";//This prints the message "Hello World!"\n   return 0;\n}');
