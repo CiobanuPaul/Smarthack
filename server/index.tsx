@@ -114,7 +114,7 @@ app.post('/login',(req,ress)=>{
         `,  (err: any, result: any, fields: any)=> {
           bcrypt.compare(req.body.parola, result.pass, (err:any, res:any)=>{
             let x: any = makeid(50);
-            con.query(`insert into session(id_user,token) values(${result.id_user},'${x}')`);
+            con.query(`insert into sessions(id_user,token) values(${result[0].id_user},'${x}')`);
             ress.send(x);
           })
 
@@ -122,7 +122,7 @@ app.post('/login',(req,ress)=>{
   })
 
 app.get('/logout', function (req, res) {
-    con.query(`delete from session where token=${req.headers['authorization']}`)
+    con.query(`delete from sessions where token=${req.headers['authorization']}`)
     res.send();
   });
 
@@ -189,7 +189,7 @@ app.post('/sendsol',(req,res)=>{
         var arr = JSON.parse(rez.toString());
         console.log(arr)
         for(var i:number=0;i<4;i++){
-            con.query(`insert into noteai values(${result.a},${i+1},${arr.result[i]})`);
+            con.query(`insert into noteai values(${JSON.parse(result).a},${i+1},${arr.result[i]})`);
         }
       })  
     })
@@ -198,13 +198,18 @@ app.post('/sendsol',(req,res)=>{
   }
   );
 })
-app.get('/selectpb1', function (req, res) {
-    con.query('select cod from problem where id_pb = 1',(err: any, result, fields: any)=>{
-      res.send(result[0].cod)
-    })
-  }
+
  
-)
+
+app.post('/month',(req: Request, res: Response) => {
+  let structure = []
+  for(let i =0;i<28;i++){
+    con.query(`select DATE_SUB(now(), INTERVAL ${i} DAY) as a,count(*) as b from rulare where time= DATE_SUB(now(), INTERVAL ${i} DAY and id_user=${req.body.id_user})`,(err,res,fetch)=>{
+      structure.push({"data":res.a,"count":res.b})
+    });
+  }
+})
+
 app.get("/stea", (req: Request, res: Response) => {
   con.query("SELECT * FROM employees where employee_id=102", function (err: any, result: any, fields: any) {
     if (err) throw err;
@@ -217,7 +222,7 @@ function verifyToken(req:any,res:any,next:any){
 
   const token = req.headers['authorization'];
   var isTokenValid = false;
-  con.query(`select * from session where token=${req.headers['authorization']}`,function(err: any, result: any, fields: any){
+  con.query(`select * from sessions where token=${req.headers['authorization']}`,function(err: any, result: any, fields: any){
     if(result.length==1)isTokenValid=true;
   })
 
