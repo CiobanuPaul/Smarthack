@@ -24,6 +24,15 @@ export default async function evaluate(code : string):Promise<String>{
 throw "fuck open ai"
 }
 
+export async function smart_hint(code : string,enunt:string):Promise<String>{
+  const completion = await openai.chat.completions.create({
+    messages: [{role: "system", content: `given 2 inputs one being a problem and the second being the c++ sorcecode to a incoplete solution give hints on how to solve the problem, even by giving examples. If the sourcecode seems to low effort reply with "try again".\n\n\n \`\`\`\n${enunt}\n\`\`\` \n\n\`\`\`cpp\n${code}\n\`\`\``}],
+    model: "gpt-4-turbo"
+  })
+  if(completion.choices[0].message.content)
+  return completion.choices[0].message.content.toString();
+throw "fuck open ai"
+}
 
 async function characterize(code : string){
   const completion = await openai.chat.completions.create({
@@ -35,6 +44,7 @@ async function characterize(code : string){
   })
   console.log(completion.choices[0])
 }
+
 
 // main();
 // characterize('#include <iostream>\nusing namespace std;\nint main(){\n  cout<<"Hello world!";//This prints the message "Hello World!"\n   return 0;\n}');
