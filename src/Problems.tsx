@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import Markdown from 'react-markdown'
 import ReactMarkdown from "react-markdown"
+import Grafic1 from './Grafic1'
 
 
 
 
 export default function Problems() {
+  return (<Grafic1/>)
   const [problems, setProblems] = useState<any>([])
   const [selected, setSelected] = useState<number>(-1)
   const [description, setDescription] = useState<string>('')
@@ -27,6 +29,8 @@ export default function Problems() {
         {
           arr
         }
+        
+
       </ul>
     )
   }
@@ -55,7 +59,14 @@ export default function Problems() {
         })
     }, [])
     console.log(description)
-    return <Markdown>{description}</Markdown>;
+    return 
+   ( <>
+    <Markdown>{description}</Markdown>;
+    <form action="/localhost:3001/sendsol" method="POST">
+        <input type="textarea" name='cod'></input>
+        <input type="text" name='id_pb'></input>
+        <input type="submit"></input>
+    </form>
+    </>)
   }
-
 }
