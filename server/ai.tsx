@@ -17,9 +17,9 @@ async function evaluate(code : string){
     +"Each integer represents your rating from 1 to 100 by evaluating the following criteria in this code: "
     +"1.Readability&Maintainability, 2.Explanation through comments, 3.Error Handling, 4.Good Practices. Here is the code:\n"
       +code}],
-    model: "gpt-3.5-turbo",
+    model: "gpt-3.5-turbo"
   })
-  console.log(completion.choices[0])
+  return completion.choices[0].message.content;
 }
 
 
