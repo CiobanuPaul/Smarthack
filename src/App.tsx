@@ -4,6 +4,9 @@ import Home from './Home.tsx'
 import {Problems,Problem} from './Problems.tsx'
 export type page = 'Home' | 'Problems' | 'Login' | 'Create Account';
 
+
+
+
 function SignIn( nume: string, prenume: string, email: string, parola: string){
        fetch('http://localhost:3001/signin/', {
         method: 'POST',
@@ -12,7 +15,7 @@ function SignIn( nume: string, prenume: string, email: string, parola: string){
           prenume,
           email,
           parola
-        }),headers: {
+        }), headers: {
           'Content-Type':'application/json'
         }
       }).then()
@@ -35,7 +38,25 @@ function App() {
           <a>Password: </a>
           <input onChange={(e) => setPassword(e.target.value)}></input>
           <br></br>
-          <button>Log In</button>
+          <button onClick={() => {
+            try {
+              fetch('http://localhost:3001/login', {
+               method: 'POST',
+               headers: 'Content-Type:',
+               body: JSON.stringify({email, password})
+              })
+              .then(data => data.json())
+              .then((res) => {
+                console.log(res.nume, res.prenume)
+              })
+            }
+            catch {
+              alert('Wrong email of password!')
+            }
+            finally {
+              setActualPage('Home')
+            }
+          }}>Log In</button>
           <p onClick = {() => setActualPage('Create Account')}>I don't have an account</p>
       </>
       )
@@ -56,8 +77,7 @@ function App() {
         <a>Password: </a>
         <input onChange={(e) => setPassword(e.target.value)}></input>
         <br></br>
-
-        <button onClick = {() => {SignIn(nume, prenume, email, password), setActualPage('Home')}}>Sign Up</button>
+        <button onClick = {() => {SignIn(nume, prenume, email, password), setActualPage('Login')}}>Sign Up</button>
 
     </>
       )
@@ -68,7 +88,7 @@ function App() {
           <div className="nav">
             <a onClick={() => setActualPage('Home')}>Home </a>
             <a onClick={() => setActualPage('Problems')}>Problems </a>
-            <button onClick={() => setActualPage('Login')}></button>
+            <button onClick={() => {fetch('http://localhost:3001/logout'), setActualPage('Login')}}>Log Out</button>
           </div>
           {actualPage === 'Home' ? <Home /> : <Problems/>}
           </>
