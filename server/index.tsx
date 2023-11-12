@@ -186,7 +186,7 @@ app.post('/sendsol',(req,res)=>{
         var arr = JSON.parse(rez.toString());
         console.log(arr)
         for(var i:number=0;i<4;i++){
-            con.query(`insert into noteai values(${result.a},${i+1},${arr.result[i]})`);
+            con.query(`insert into noteai values(${result[0].a},${i+1},${arr.result[i]})`);
         }
       })  
     })
