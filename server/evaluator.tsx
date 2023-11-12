@@ -41,16 +41,6 @@ const cpp_eval = async(problem_id: Number, code: string): Promise<evalret> => {
     file.end()
     await delay(100)
     let restrict = parse_grader(fs.readFileSync("./probleme/id_" + problem_id + '/grader.properties').toString())
-    // let gpp = child_process.spawn("g++", [path_to_eval_folder + "main.cpp", '-o', 'exec'], { timeout: 5 * 1000 })
-    // gpp.stderr.on('data', (txt) => {
-    //     res.compiler_err += txt
-    // })
-    // gpp.stdout.on('data', (txt) => {
-    //     res.compiler_stdout += txt
-    // })
-    // gpp.on("exit", (code: Number, signal: String) => {
-    //     res.compiler_exit_code = code
-    // })
     let gpp = child_process.spawnSync('g++', [path_to_eval_folder + "main.cpp", '-o', path_to_eval_folder + 'exec'], {
         timeout: 5 * 1000
     })
