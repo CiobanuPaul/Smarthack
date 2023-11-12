@@ -31,6 +31,7 @@ export function Problems() {
     } 
     else {
         //fetch la problems/id -> valoare selected
+        
     } 
     
 }
