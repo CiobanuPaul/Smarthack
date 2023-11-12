@@ -17,7 +17,7 @@ type evalret = {
     compiler_err: String
     compiler_stdout: String
     compiler_exit_code: Number
-    tests: Number[]
+    tests: number[]
 }
 
 function default_evalret(): evalret {
@@ -34,7 +34,7 @@ function delay(ms: number) {
 }
 
 
-const cpp_eval = async(problem_id: Number, code: string): Promise<evalret> => {
+export default async function cpp_eval(problem_id: Number, code: string): Promise<evalret>  {
     let res = default_evalret()
     let file = fs.createWriteStream(path_to_eval_folder + 'main.cpp')//racecondition
     file.write(code);
@@ -75,7 +75,7 @@ const cpp_eval = async(problem_id: Number, code: string): Promise<evalret> => {
     return res;
 }
 
-const eval_exec = (input: String, output: String, fr: Number): Number => {
+const eval_exec = (input: String, output: String, fr: number): number => {
     return (input.trim() == output.trim()) ? fr : 0;
 }
 
