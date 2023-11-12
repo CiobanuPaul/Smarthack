@@ -105,8 +105,9 @@ function makeid(length: number) {
   return result;
 }
 app.post('/login', (req, ress) => {
+  ress.send({'token':20});/*
   let mail = req.body.email.toString()
-  console.log(mail);
+  //console.log(mail);
   con.query(`
         SELECT id_user,pass, nume, prenume 
         FROM users 
@@ -114,11 +115,20 @@ app.post('/login', (req, ress) => {
         `,  (err: any, result: any, fields: any)=> {
           bcrypt.compare(req.body.parola, result.pass, (err:any, res:any)=>{
             let x: any = makeid(50);
+            console.log(`
+        
+        
+        ----
+        ${JSON.parse(JSON.stringify(result[0]))}
+        ----
+        
+        
+        
+        `)
             con.query(`insert into sessions(id_user,token) values(${result[0].id_user},'${x}')`);
-            ress.send(x);
           })
 
-  })
+  })*/
 })
 
 app.get('/logout', function (req, res) {
@@ -188,6 +198,7 @@ app.post('/sendsol', (req, res) => {
       evaluate(req.body.cod).then((rez: String) => {
         var arr = JSON.parse(rez.toString());
         const a=result
+        
         for (var i: number = 0; i < 4; i++) {
           con.query(`insert into noteai values(${a[0].a},${i + 1},${arr.result[i]})`);
         }
@@ -204,8 +215,9 @@ app.post('/sendsol', (req, res) => {
 app.post('/month',(req: Request, res: Response) => {
   let structure = []
   for(let i =0;i<28;i++){
-    con.query(`select DATE_SUB(now(), INTERVAL ${i} DAY) as a,count(*) as b from rulare where time= DATE_SUB(now(), INTERVAL ${i} DAY and id_user=${req.body.id_user})`,(err,res,fetch)=>{
-      structure.push({"data":res.a,"count":res.b})
+    con.query(`select *  from DATE_SUB(now(), INTERVAL ${i} DAY) as a , count(*) as b from rulare where time= DATE_SUB(now(), INTERVAL ${i} DAY and id_user=${req.body.id_user })`,(err,res,fetch)=>{
+      console.log(res)
+      //structure.push({"data":res.a,"count":res.b})
     });
   }
 })
