@@ -2,14 +2,12 @@ import {useEffect, useState} from 'react'
 import ReactMarkdown from "react-markdown"
 
 
-export function Problem(){
-    
-}
+
 
 export function Problems() {
     const [problems, setProblems] = useState<any>([])
-    const [selected, setSelected] = useState<number>(-1)
-    if(selected == -1){
+    const [selected, setSelected] = useState<object>({})
+    if(selected == {}){
       useEffect(() => {
         fetch('http://localhost:3001/problems')
         .then(res => res.json())
@@ -19,7 +17,7 @@ export function Problems() {
       }, [])
       //console.log(problems)
       let arr:any=[]
-      problems.map((p:any) => arr.push(<p>{p.id_pb}. {p.nume}</p>))
+      problems.map((p:any) => arr.push(<p onClick={()=>setSelected(p)}>{p.id_pb}. {p.nume}</p>))
       console.log(arr)
     return (
         <ul>
@@ -30,7 +28,16 @@ export function Problems() {
     )  
     } 
     else {
-        //fetch la problems/id -> valoare selected
+      fetch('http://localhost:3001/pbanume', {
+        method: 'POST',
+        body: JSON.stringify({
+          selected
+        }), headers: {
+          'Content-Type':'application/json'
+        }
+      }).then((res:Response)=>{
+        return <ReactMarkdown>res</ReactMarkdown>;
+      })
         
     } 
     
