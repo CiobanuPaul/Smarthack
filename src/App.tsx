@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import Home from './Home.tsx'
-import Problems from './Problems.tsx'
+import {Problems,Problem} from './Problems.tsx'
 export type page = 'Home' | 'Problems' | 'Login' | 'Create Account';
 
 function SignIn( nume: string, prenume: string, email: string, parola: string){
@@ -20,7 +20,7 @@ function SignIn( nume: string, prenume: string, email: string, parola: string){
 }
 
 function App() {
-  const [actualPage, setActualPage] = useState<page>('Login')
+  const [actualPage, setActualPage] = useState<page>('Problems')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [nume, setNume] = useState('')
