@@ -42,8 +42,8 @@ function App() {
             try {
               fetch('http://localhost:3001/login', {
                method: 'POST',
-               headers: 'Content-Type:',
-               body: JSON.stringify({email, password})
+               body: JSON.stringify({email, password}),
+               headers: {'Content-Type': 'application/json'},
               })
               .then(data => data.json())
               .then((res) => {
