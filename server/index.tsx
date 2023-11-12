@@ -173,8 +173,10 @@ app.get('/descpb', function (req, res) {
     res.send(result[0].cod)
   })
 }
-
 )
+app.post('/sendsol',(req,res)=>{
+  
+})
 app.get('/selectpb1', function (req, res) {
     con.query('select cod from problem where id_pb = 1',(err: any, result, fields: any)=>{
       res.send(result[0].cod)
