@@ -1,7 +1,7 @@
 use smarthack;
 
 create table users(
-    id_user DECIMAL(5),
+    id_user int AUTO_INCREMENT,
     nume varchar(25),
     prenume varchar(25),
     email varchar(50),
@@ -11,29 +11,29 @@ create table users(
 );
 
 create table problem(
-    id_pb DECIMAL(5),
+    id_pb int AUTO_INCREMENT,
     ptr_file varchar(25),
     nume varchar(25),
     constraint pb_pk primary key(id_pb)
 );
 
 create table categorie(
-    id_cat DECIMAL(5),
+    id_cat  int AUTO_INCREMENT,
     nume varchar(25),
      constraint cat_pk primary key(id_cat)
 );
 
 create table AIReqs(
-    id_pb DECIMAL(5),
-    id_req DECIMAL(5),
+    id_pb  int,
+    id_req int,
     nume varchar(25),
     constraint AIR_pk primary key(id_pb,id_req),
     constraint AIR_pb_fk foreign key(id_pb) references problem(id_pb)
 );
 
 create table Pb_Cat(
-    id_pb DECIMAL(5),
-    id_cat DECIMAL(5),
+    id_pb int,
+    id_cat int,
     difficulty DECIMAL(3),
     constraint PC_pk primary key(id_pb,id_cat),
     constraint PC_pb_fk foreign key(id_pb) references problem(id_pb),
@@ -41,9 +41,9 @@ create table Pb_Cat(
 );
 
 create table rulare(
-    id_rulare DECIMAL(5),
-    id_user DECIMAL(5),
-    id_pb DECIMAL(5),
+    id_rulare int AUTO_INCREMENT,
+    id_user int,
+    id_pb int,
     time date,
     nota_rulare DECIMAL(3),
     solution_ptr varchar(25), 
@@ -53,9 +53,9 @@ create table rulare(
 );
 
 create table noteAI(
-    id_rulare DECIMAL(5),
-    id_pb DECIMAL(5),
-    id_req DECIMAL(5),
+    id_rulare int,
+    id_pb int,
+    id_req int,
     nota DECIMAL(3),
     constraint NAI_rul_fk foreign key(id_rulare) references rulare(id_rulare),
     constraint NAI_pbreq_fk foreign key(id_pb,id_req) references AIReqs(id_pb,id_req),
