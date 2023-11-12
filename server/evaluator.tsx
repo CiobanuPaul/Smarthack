@@ -29,22 +29,18 @@ function default_evalret(): evalret {
     }
 }
 
-const cpp_eval = (problem_id: Number, code: string): evalret => {
+function delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+}
+
+
+const cpp_eval = async(problem_id: Number, code: string): Promise<evalret> => {
     let res = default_evalret()
     let file = fs.createWriteStream(path_to_eval_folder + 'main.cpp')//racecondition
     file.write(code);
     file.end()
+    await delay(100)
     let restrict = parse_grader(fs.readFileSync("./probleme/id_" + problem_id + '/grader.properties').toString())
-    // let gpp = child_process.spawn("g++", [path_to_eval_folder + "main.cpp", '-o', 'exec'], { timeout: 5 * 1000 })
-    // gpp.stderr.on('data', (txt) => {
-    //     res.compiler_err += txt
-    // })
-    // gpp.stdout.on('data', (txt) => {
-    //     res.compiler_stdout += txt
-    // })
-    // gpp.on("exit", (code: Number, signal: String) => {
-    //     res.compiler_exit_code = code
-    // })
     let gpp = child_process.spawnSync('g++', [path_to_eval_folder + "main.cpp", '-o', path_to_eval_folder + 'exec'], {
         timeout: 5 * 1000
     })
@@ -125,4 +121,4 @@ const parse_grader = (str: String): restrictions => {
     return res
 }
 
-console.log(cpp_eval(10, '/* Stud. Bucă Mihnea-Vicențiu \n   Facultatea de Matematică și Informatică \n   O(nlogV_MAX) \n*/\n  \n#include <bits/stdc++.h> \n  \nusing namespace std; \n#define fin cin\n#define fout cout  \n//ifstream fin(\"pietricele.in\"); \n//fstream fout(\"pietricele.out\"); \n\nint cost[30];\nint c, n, k; \n\nchar s[200005];  \n  \nint main() { \n    fin >> c >> n >> k; \n    fin >> s; \n    for (int i = 0; i < 26; ++i) \n        fin >> cost[i]; \n  \n    /* cerinta 1 */\n    if (c == 1) { \n        assert(c == 1); \n        assert(1 <= n and n <= 200000); \n        assert(1 <= k and k <= n); \n        long long sol = 0, sum = 0; \n        k = n - k + 1; \n        for (int i = 0; i < n; ++i) { \n            sum += cost[s[i] - \'a\']; \n            if (i >= k) sum -= cost[s[i - k] - \'a\']; \n            sol = std::max(sol, sum); \n        } \n        fout << sol; \n        return 0; \n    } \n  \n    assert(c == 2); \n    assert(1 <= n and n <= 200000); \n    assert(1 <= k and k <= n); \n  \n    /* cerinta 2 */\n    long long st = 1, dr = 1e18, sol = -1; \n    while(st <= dr){ \n        long long mij = (st + dr) / 2, sum = 0, ct = 0; \n        for (int i = 0; i < n; i++) { \n            sum += cost[s[i] - \'a\']; \n            if (sum >= mij) { \n                ++ct; \n                sum = 0; \n            } \n        } \n        if (ct >= k) { \n            sol = mij; \n            st = mij + 1; \n        } else { \n            dr = mij - 1; \n        } \n    } \n    fout << sol; \n}'))
+cpp_eval(10, '/* Stud. Bucă Mihnea-Vicențiu \n   Facultatea de Matematică și Informatică \n   O(nlogV_MAX) \n*/\n  \n#include <bits/stdc++.h> \n  \nusing namespace std; \n#define fin cin\n#define fout cout  \n//ifstream fin(\"pietricele.in\"); \n//fstream fout(\"pietricele.out\"); \n\nint cost[30];\nint c, n, k; \n\nchar s[200005];  \n  \nint main() { \n    fin >> c >> n >> k; \n    fin >> s; \n    for (int i = 0; i < 26; ++i) \n        fin >> cost[i]; \n  \n    /* cerinta 1 */\n    if (c == 1) { \n        assert(c == 1); \n        assert(1 <= n and n <= 200000); \n        assert(1 <= k and k <= n); \n        long long sol = 0, sum = 0; \n        k = n - k + 1; \n        for (int i = 0; i < n; ++i) { \n            sum += cost[s[i] - \'a\']; \n            if (i >= k) sum -= cost[s[i - k] - \'a\']; \n            sol = std::max(sol, sum); \n        } \n        fout << sol; \n        return 0; \n    } \n  \n    assert(c == 2); \n    assert(1 <= n and n <= 200000); \n    assert(1 <= k and k <= n); \n  \n    /* cerinta 2 */\n    long long st = 1, dr = 1e18, sol = -1; \n    while(st <= dr){ \n        long long mij = (st + dr) / 2, sum = 0, ct = 0; \n        for (int i = 0; i < n; i++) { \n            sum += cost[s[i] - \'a\']; \n            if (sum >= mij) { \n                ++ct; \n                sum = 0; \n            } \n        } \n        if (ct >= k) { \n            sol = mij; \n            st = mij + 1; \n        } else { \n            dr = mij - 1; \n        } \n    } \n    fout << sol; \n}').then((v)=>{console.log(v)})
