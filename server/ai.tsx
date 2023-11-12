@@ -13,7 +13,7 @@ async function main() {
 
 export default async function evaluate(code : string):Promise<String>{
   const completion = await openai.chat.completions.create({
-    messages: [{role: "system", content: "Give me a JSON string containg an array of 4 integers. "
+    messages: [{role: "system", content: "Give me a JSON string containg an array of 4 integers ( {\'result\':[score1, score2, score3, score4]} ). "
     +"Each integer represents your rating from 1 to 100 by evaluating the following criteria in this code: "
     +"1.Readability&Maintainability, 2.Explanation through comments, 3.Error Handling, 4.Good Practices. Here is the code:\n"
       +code}],
