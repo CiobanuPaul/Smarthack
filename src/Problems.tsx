@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import Markdown from 'react-markdown'
 import ReactMarkdown from "react-markdown"
+import Grafic1 from './Grafic1'
 
 
 
 
 export default function Problems() {
-  const [problems, setProblems] = useState<any>([])
+  return (<Grafic1/>)
+  /*const [problems, setProblems] = useState<any>([])
   const [selected, setSelected] = useState<number>(-1)
   const [description, setDescription] = useState<string>('')
   if (selected == -1) {
@@ -57,5 +59,5 @@ export default function Problems() {
     console.log(description)
     return <Markdown>{description}</Markdown>;
   }
-
+  */
 }
