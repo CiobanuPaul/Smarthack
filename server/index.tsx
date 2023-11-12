@@ -44,10 +44,10 @@ app.get('/', originfix, (req: Request, res: Response) => {
   res.send("hello")
 });
 app.post('/signin', originfix, urlencodedParser, (req: Request, res: Response) => {
-  console.log(req.body)
   // req.body; // JavaScript object containing the parse JSON
   // res.json(req.body);
-  bcrypt.hash(req.body.password, 8,function(err:any, hash:any) {
+  bcrypt.hash(req.body.parola.toString(), 8,function(err:any, hash:any) {
+    console.log(hash)
     con.query(
       `
         insert into users 
@@ -72,18 +72,23 @@ app.post('/signin', originfix, urlencodedParser, (req: Request, res: Response) =
   // res.send("ok")
 })
 app.post('/login', originfix, urlencodedParser, (req: Request, res: Response) => {
-  let password: any = bcrypt.hash(req.body.password, 8)
-  let username = req.body.email
-  con.query(`SELECT id_user,pass, nume, prenume FROM users where email=${req.body.email}`, function (err: any, result: any, fields: any) {
-    if (result.pass == password) {
+  bcrypt.hash(req.body.parola.toString(), 8,function(err:any, hash:any) {
+  let username = req.body.email.toString()
+  con.query(`
+      SELECT id_user,pass, nume, prenume 
+      FROM users 
+      where email=${username}
+      `, function (err: any, result: any, fields: any) {
+    console.log(result)
+    if (result.pass == hash) {
       let id: String = result.id_user.toString()
       session.username = id;
-      res.send(result.nume + " " + result.prenume)
+      res.send({id:result.id_user,nume:result.nume, prenume: result.prenume})
     } else {
       session.username = false;
       res.send("error");
     }
-  });
+  });})
 });
 
 app.get('/logout', function (req, res) {
@@ -106,7 +111,13 @@ app.get('/tipuripb', function (req, res) {
 })
 
 app.post('/pbanume', function (req, res) {
-  con.query(`select c.id_pb,c.nume, pb.difficulty from pb_cat pb, problem p,categorie c where pb.id_pb=p.id and pb.id_cat=c.id_cat and p.nume=${req.body.name}`, function (err: any, result: any, fields: any) {
+  con.query(`
+          select c.id_pb,c.nume, pb.difficulty 
+          from pb_cat pb, problem p,categorie c 
+          where pb.id_pb=p.id 
+          and pb.id_cat=c.id_cat 
+          and p.nume=${req.body.name}
+          `, function (err: any, result: any, fields: any) {
     if (err) throw err;
     res.send(result);
   })
