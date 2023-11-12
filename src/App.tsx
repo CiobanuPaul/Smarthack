@@ -7,8 +7,8 @@ export type page = 'Home' | 'Problems' | 'Login' | 'Create Account';
 
 
 
-function SignIn( nume: string, prenume: string, email: string, parola: string){
-       fetch('http://localhost:3001/signin/', {
+async function SignIn( nume: string, prenume: string, email: string, parola: string){
+       await fetch('http://localhost:3001/signin/', {
         method: 'POST',
         body: JSON.stringify({
           nume,
@@ -18,7 +18,7 @@ function SignIn( nume: string, prenume: string, email: string, parola: string){
         }), headers: {
           'Content-Type':'application/json'
         }
-      }).then()
+      })
     
 }
 
@@ -28,6 +28,7 @@ function App() {
   const [password, setPassword] = useState('')
   const [nume, setNume] = useState('')
   const [prenume, setPrenume] = useState('')
+  const [id,setId]=useState('')
     if(actualPage === 'Login'){
       return (
         <>
@@ -47,7 +48,8 @@ function App() {
               })
               .then(data => data.json())
               .then((res) => {
-                console.log(res.nume, res.prenume)
+                setId(res.token)
+                console.log(id)
               })
             }
             catch {
