@@ -213,13 +213,43 @@ app.post('/sendsol', (req, res) => {
  
 
 app.post('/month',(req: Request, res: Response) => {
-  let structure = []
-  for(let i =0;i<28;i++){
-    con.query(`select *  from DATE_SUB(now(), INTERVAL ${i} DAY) as a , count(*) as b from rulare where time= DATE_SUB(now(), INTERVAL ${i} DAY and id_user=${req.body.id_user })`,(err,res,fetch)=>{
-      console.log(res)
-      //structure.push({"data":res.a,"count":res.b})
+  let structure:any = []
+    con.query(`select time, count(*) as a from rulare where id_user = ${req.body.id_user } and time between DATE_SUB(now(), INTERVAL 28 DAY) AND DATE_ADD(now(),INTERVAL 1 DAY) group by time`,(err,data)=>{
+      console.log(err,data)
+      for(let i of data){
+        structure.push(i)
+      }
+      console.log(structure)
+      res.send(structure)
     });
   }
+)
+
+app.get('/grafic1',(req: Request, res: Response) => {
+  con.query('select time, sum(nota_rulare)/count(*) as a from rulare where id_user = 20 and time between DATE_SUB(now(), INTERVAL 28 DAY) AND DATE_ADD(now(),INTERVAL 1 DAY) group by time;',(err,data)=>{
+    res.send(data);
+  })
+})
+
+app.get('/code_cleanliness',(req: Request, res: Response) => {
+  con.query('select r.time,(n.nota)/count(*) as a from rulare r, noteai n, aireqs a where r.id_user = 20 and r.id_rulare=n.id_rulare and n.id_req = a.id_req and time between DATE_SUB(now(), INTERVAL 28 DAY) AND DATE_ADD(now(),INTERVAL 1 DAY) and a.nume= '+' "code cleanliness" '+' group by r.time;',(err,data)=>{
+    res.send(data);
+  })
+})
+app.get('/comments',(req: Request, res: Response) => {
+  con.query('select r.time,(n.nota)/count(*) as a from rulare r, noteai n, aireqs a where r.id_user = 20 and r.id_rulare=n.id_rulare and n.id_req = a.id_req and time between DATE_SUB(now(), INTERVAL 28 DAY) AND DATE_ADD(now(),INTERVAL 1 DAY) and a.nume='+' "comments" '+' group by r.time;',(err,data)=>{
+    res.send(data);
+  })
+})
+app.get('/error_handling',(req: Request, res: Response) => {
+  con.query('select r.time, (n.nota)/count(*) as a from rulare r, noteai n, aireqs a where r.id_user = 20 and r.id_rulare=n.id_rulare and n.id_req = a.id_req and time between DATE_SUB(now(), INTERVAL 28 DAY) AND DATE_ADD(now(),INTERVAL 1 DAY) and a.nume='+' "error handling" '+' group by r.time;',(err,data)=>{
+    res.send(data);
+  })
+})
+app.get('/good_practices',(req: Request, res: Response) => {
+  con.query('select r.time,(n.nota)/count(*) as a from rulare r, noteai n, aireqs a where r.id_user = 20 and r.id_rulare=n.id_rulare and n.id_req = a.id_req and time between DATE_SUB(now(), INTERVAL 28 DAY) AND DATE_ADD(now(),INTERVAL 1 DAY) and a.nume='+' "good practices"'+' group by r.time;',(err,data)=>{
+    res.send(data);
+  })
 })
 
 app.get("/stea", (req: Request, res: Response) => {
