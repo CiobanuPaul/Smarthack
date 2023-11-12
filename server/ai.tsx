@@ -11,7 +11,7 @@ async function main() {
   console.log(completion.choices[0]);
 }
 
-export default async function evaluate(code : string):Promise<String>{
+export async function evaluate(code : string):Promise<String>{
   const completion = await openai.chat.completions.create({
     messages: [{role: "system", content: "Give me a JSON string containg an array of 4 integers ( {\'result\':[score1, score2, score3, score4]} ). "
     +"Each integer represents your rating from 1 to 100 by evaluating the following criteria in this code: "
