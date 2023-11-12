@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Markdown from 'react-markdown'
 import ReactMarkdown from "react-markdown"
-import Grafic1 from './Grafic1'
+import {Grafic1, Code_cleanliness, Comments, Error_handling} from './Grafic1'
 
 
 
@@ -29,8 +29,10 @@ export default function Problems() {
         {
           arr
         }
-        
-
+        <Grafic1></Grafic1>
+        <Code_cleanliness></Code_cleanliness>
+        <Error_handling></Error_handling>
+        <Comments></Comments>
       </ul>
     )
   }

@@ -23,7 +23,7 @@ function SignIn( nume: string, prenume: string, email: string, parola: string){
 }
 
 function App() {
-  const [actualPage, setActualPage] = useState<page>('Problems')
+  const [actualPage, setActualPage] = useState<page>('Home')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [nume, setNume] = useState('')
