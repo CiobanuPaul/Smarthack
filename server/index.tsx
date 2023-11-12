@@ -180,7 +180,7 @@ app.post('/filter', function (req, res) {
 app.get('/test-auth', verifyToken, (req, res) => { res.send('auth works') })
 
 app.get('/descpb', function (req, res) {
-  con.query(`select cod from problem where id_pb = ${req.query.id}`, (err: any, result, fields: any) => {
+  con.query(`select cod from problem where id_pb = ${req.query.selected}`, (err: any, result, fields: any) => {
     res.send(result[0].cod)
   })
 }

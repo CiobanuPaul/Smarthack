@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import './App.css'
 import Home from './Home.tsx'
-import {Problems,Problem} from './Problems.tsx'
-export type page = 'Home' | 'Problems' | 'Login' | 'Create Account';
+import Problems from './Problems.tsx'
+type page = 'Home' | 'Problems' | 'Login' | 'Create Account';
 
 
 
 
-async function SignIn( nume: string, prenume: string, email: string, parola: string){
-       await fetch('http://localhost:3001/signin/', {
+function SignIn( nume: string, prenume: string, email: string, parola: string){
+       fetch('http://localhost:3001/signin/', {
         method: 'POST',
         body: JSON.stringify({
           nume,
@@ -18,7 +18,7 @@ async function SignIn( nume: string, prenume: string, email: string, parola: str
         }), headers: {
           'Content-Type':'application/json'
         }
-      })
+      }).then()
     
 }
 
@@ -28,7 +28,6 @@ function App() {
   const [password, setPassword] = useState('')
   const [nume, setNume] = useState('')
   const [prenume, setPrenume] = useState('')
-  const [id,setId]=useState('')
     if(actualPage === 'Login'){
       return (
         <>
@@ -41,15 +40,14 @@ function App() {
           <br></br>
           <button onClick={() => {
             try {
-              fetch('http://localhost:3001/login', {
+              fetch('http://172.16.31.95/login', {
                method: 'POST',
-               body: JSON.stringify({email, password}),
-               headers: {'Content-Type': 'application/json'},
+               headers: {'Content-Type': "application/json"},
+               body: JSON.stringify({email, password})
               })
               .then(data => data.json())
               .then((res) => {
-                setId(res.token)
-                console.log(id)
+                console.log(res.nume, res.prenume)
               })
             }
             catch {
