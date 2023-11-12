@@ -3,7 +3,7 @@ import express, { Express, Request, Response } from "express";
 import passport from 'passport';
 import session from 'express-session';
 import eval_cpp from './evaluator'
-import evaluate from './ai'
+import {evaluate,smart_hint} from './ai'
 import bcrypt from 'bcrypt'
 
 //const path = require('path');
@@ -40,6 +40,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import mysql from 'mysql'
+import { rejects } from "assert";
 //var mysql = require('mysql');
 
 var con = mysql.createConnection({
@@ -277,7 +278,11 @@ function verifyToken(req: any, res: any, next: any) {
   }
 
 }
-
+app.get('/ai2',(req: Request, res: Response)=>{
+  //console.log(req.heade.r)
+  //smart_hint("20",req.header).then(raspuns:String){}
+  res.send(req.header.toString())
+})
 
 app.listen(3001);
 
