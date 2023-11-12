@@ -2,13 +2,13 @@
 import express, { Express, Request, Response } from "express";
 import passport from 'passport';
 import session from 'express-session';
-//import eval_cpp from 'evaluator'
+import eval_cpp from './evaluator'
 import bcrypt from 'bcrypt'
 
 //const path = require('path');
 
 import bodyParser from "body-parser";
-//const bodyParser = require('body-parser')
+//const bodyParser = require('body-parser') 
 //var cors = require('cors')
 import cors from 'cors'
 const app: Express = express()
@@ -174,8 +174,15 @@ app.get('/descpb', function (req, res) {
   })
 }
 )
+const sum = (...arr: number[]) => [...arr].reduce((acc, val) => acc + val, 0);
 app.post('/sendsol',(req,res)=>{
-  
+  eval_cpp(req.body.id_pb,req.body.cod).then((resultat)=>{
+
+    con.query(`insert into rulare(id_user,id_pb,time,nota_rulare) 
+              values(${req.body.id_user},${req.body.id_pb},now(),${sum(...resultat.tests)}`)
+    res.send(resultat); 
+  }
+  );
 })
 app.get('/selectpb1', function (req, res) {
     con.query('select cod from problem where id_pb = 1',(err: any, result, fields: any)=>{
