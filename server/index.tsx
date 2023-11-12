@@ -179,7 +179,7 @@ app.post('/sendsol',(req,res)=>{
   eval_cpp(req.body.id_pb,req.body.cod).then((resultat)=>{
 
     con.query(`insert into rulare(id_user,id_pb,time,nota_rulare) 
-              values(${req.body.id_user},${req.body.id_pb},now(),${sum(...resultat.tests)}`)
+              values(${req.body.id_user},${req.body.id_pb-9},now(),${sum(...resultat.tests)}`)
     res.send(resultat); 
   }
   );
