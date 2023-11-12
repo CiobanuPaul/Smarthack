@@ -176,12 +176,15 @@ app.get('/descpb', function (req, res) {
 }
 )
 const sum = (...arr: number[]) => [...arr].reduce((acc, val) => acc + val, 0);
+
+
 app.post('/sendsol',(req,res)=>{
   eval_cpp(req.body.id_pb,req.body.cod).then((resultat)=>{
 
     con.query(`insert into rulare(id_user,id_pb,time,nota_rulare) 
               values(${req.body.id_user},${req.body.id_pb-9},now(),${sum(...resultat.tests)})`)
-    con.query(`select max(id_rulare) as a from rulare)`,(err,result,fetch)=>{
+    con.query(`select max(id_rulare) as a 
+              from rulare`,(err,result,fetch)=>{
       evaluate(req.body.cod).then((rez:String)=>{
         var arr = JSON.parse(rez.toString());
         console.log(arr)
