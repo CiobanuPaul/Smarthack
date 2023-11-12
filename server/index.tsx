@@ -217,7 +217,7 @@ function verifyToken(req: any, res: any, next: any) {
 
   const token = req.headers['authorization'];
   var isTokenValid = false;
-  con.query(`select * from session where token=${req.headers['authorization']}`, function (err: any, result: any, fields: any) {
+  con.query(`select * from sessions where token=${req.headers['authorization']}`, function (err: any, result: any, fields: any) {
     if (result.length == 1) isTokenValid = true;
   })
 
