@@ -1,18 +1,28 @@
 //oare va merge?
 import express, { Express, Request, Response } from "express";
-const bcrypt = require("bcrypt")
-const path = require('path');
-const bodyParser = require('body-parser')
-var cors = require('cors')
+import passport from 'passport';
+import session from 'express-session';
+
+import bcrypt from 'bcrypt'
+
+//const path = require('path');
+
+import bodyParser from "body-parser";
+//const bodyParser = require('body-parser')
+//var cors = require('cors')
+import cors from 'cors'
 const app: Express = express()
-const session = require("express-session");
+
 app.use(express.static("html"));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(session({
   secret: "The quick brown fox jumps over the lazy dog",
-  resave: true,
-  saveUninitialized: true
+  resave: false,
+  saveUninitialized: false
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(cors())
 let gc: Number = 0;
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
@@ -24,11 +34,12 @@ const originfix = (req: Request, res: Response, next: any) => {
   next();
 }
 
-var dotenv = require('dotenv')
+import dotenv from 'dotenv'
+//var dotenv = require('dotenv')
 dotenv.config()
 
-var mysql = require('mysql');
-
+import mysql from 'mysql'
+//var mysql = require('mysql');
 
 var con = mysql.createConnection({
   host: process.env.host,
@@ -40,61 +51,80 @@ con.connect(function (err: any) {
   if (err) throw err;
 });
 
-app.get('/', originfix, (req: Request, res: Response) => {
-  res.send("hello")
+app.get('/', (req:any, res) => {
+  if (req.isAuthenticated()) {
+    res.send(`Hello, ${req.user.username}!`);
+  } else {
+    res.send('Not authenticated.');
+  }
 });
+
 app.post('/signin', originfix, urlencodedParser, (req: Request, res: Response) => {
   // req.body; // JavaScript object containing the parse JSON
   // res.json(req.body);
-  bcrypt.hash(req.body.parola.toString(), 8,function(err:any, hash:any) {
-    console.log(hash)
-    con.query(
-      `
+  bcrypt.genSalt(8).then(salt=>{
+
+    console.log(req.body.parola.toString().trim())
+    bcrypt.hash(req.body.parola.toString().trim(),salt ,function(err:any, hash:any) {
+      console.log(hash)
+      con.query(
+        `
         insert into users 
-        (nume, prenume, email, data_inscriere, pass)
+        (nume, prenume, email, data_inscriere, pass, salt)
         values (
           '${req.body.nume.toString()}',
           '${req.body.prenume.toString()}',
           '${req.body.email.toString()}',
           now(),
-          '${hash}')
-      `
-    ,function(err:any,result:any){
-     if (err){
-      res.send(err);
-     } else{
-      res.send("Succes");
-     }
-  })
-    // res.send("ok")
+          '${hash}',
+          '${salt}')
+          `
+          ,function(err:any,result:any){
+            if (err){
+              res.send(err);
+            } else{
+              res.send("Success");
+            }
+          })
+        })
+          // res.send("ok")
 });
   
   // res.send("ok")
 })
-app.post('/login', originfix, urlencodedParser, (req: Request, res: Response) => {
-  bcrypt.hash(req.body.parola.toString(), 8,function(err:any, hash:any) {
-  let username = req.body.email.toString()
-  con.query(`
-      SELECT id_user,pass, nume, prenume 
-      FROM users 
-      where email=${username}
-      `, function (err: any, result: any, fields: any) {
-    console.log(result)
-    if (result.pass == hash) {
-      let id: String = result.id_user.toString()
-      session.username = id;
-      res.send({id:result.id_user,nume:result.nume, prenume: result.prenume})
-    } else {
-      session.username = false;
-      res.send("error");
-    }
-  });})
-});
+function makeid(length:number) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
+app.post('/login',(req,ress)=>{
+  let mail = req.body.email.toString()
+  console.log(mail);
+    con.query(`
+        SELECT id_user,pass, nume, prenume 
+        FROM users 
+        where email='${mail}';
+        `,  (err: any, result: any, fields: any)=> {
+          bcrypt.compare(req.body.parola, result.pass, (err:any, res:any)=>{
+            let x: any = makeid(50);
+            con.query(`insert into session(id_user,token) values(${result.id_user},'${x}')`);
+            ress.send(x);
+          })
+
+        })
+  })
 
 app.get('/logout', function (req, res) {
-  session.destroy();
-  res.send();
-});
+    con.query(`delete from session where token=${req.headers['authorization']}`)
+    res.send();
+  });
+
 
 app.get('/problems', function (req, res) {
   con.query('select id_pb,nume from problem', function (err: any, result: any, fields: any) {
@@ -136,15 +166,22 @@ app.post('/filter', function (req, res) {
   })
 })
 
-app.get('/selectpb', function (req, res) {
-  res.sendFile(`./probleme/id_${req.query.id}`);
-})
+app.get('/test-auth',verifyToken,(req, res)=>{res.send('auth works')})
+
+app.get('/descpb', function (req, res) {
+  con.query(`select cod from problem where id_pb = ${req.query.id}`,(err: any, result, fields: any)=>{
+    res.send(result[0].cod)
+  })
+}
+
+)
 app.get('/selectpb1', function (req, res) {
-  const options = {
-    root: path.join(__dirname)
-  };
-  res.sendFile(`/probleme/id_10/description.md`, options);
-})
+    con.query('select cod from problem where id_pb = 1',(err: any, result, fields: any)=>{
+      res.send(result[0].cod)
+    })
+  }
+ 
+)
 app.get("/stea", (req: Request, res: Response) => {
   con.query("SELECT * FROM employees where employee_id=102", function (err: any, result: any, fields: any) {
     if (err) throw err;
@@ -152,4 +189,28 @@ app.get("/stea", (req: Request, res: Response) => {
   });
 });
 
+function verifyToken(req:any,res:any,next:any){
+
+
+  const token = req.headers['authorization'];
+  var isTokenValid = false;
+  con.query(`select * from session where token=${req.headers['authorization']}`,function(err: any, result: any, fields: any){
+    if(result.length==1)isTokenValid=true;
+  })
+
+  if(isTokenValid){
+
+      next();
+
+  }else{
+      res.sendStatus(401);
+  }
+
+}
+
+
 app.listen(3001);
+
+function callback(err: any): any {
+  throw new Error("Function not implemented.");
+}

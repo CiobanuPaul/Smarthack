@@ -24,11 +24,9 @@ create table categorie(
 );
 
 create table AIReqs(
-    id_pb  int,
-    id_req int,
+    id_req int int AUTO_INCREMENT,
     nume varchar(25),
-    constraint AIR_pk primary key(id_pb,id_req),
-    constraint AIR_pb_fk foreign key(id_pb) references problem(id_pb)
+    constraint AIR_pk primary key(id_req),
 );
 
 create table Pb_Cat(
@@ -54,10 +52,17 @@ create table rulare(
 
 create table noteAI(
     id_rulare int,
-    id_pb int,
     id_req int,
     nota DECIMAL(3),
     constraint NAI_rul_fk foreign key(id_rulare) references rulare(id_rulare),
-    constraint NAI_pbreq_fk foreign key(id_pb,id_req) references AIReqs(id_pb,id_req),
-    constraint NAI_pk primary key(id_rulare,id_pb,id_req)
+    constraint NAI_req_fk foreign key(id_req) references AIReqs(id_req),
+    constraint NAI_pk primary key(id_rulare,id_req)
 );
+
+create table sessions(
+    id_session int AUTO_INCREMENT,
+    id_user int,
+    token varchar(50),
+    constraint ss_user_fk foreign key(id_user) references users(id_user),
+    cosntraint ss_pk primary key(id_session)
+ )
