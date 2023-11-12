@@ -3,6 +3,7 @@ import express, { Express, Request, Response } from "express";
 import passport from 'passport';
 import session from 'express-session';
 import eval_cpp from './evaluator'
+import evaluate from './ai'
 import bcrypt from 'bcrypt'
 
 //const path = require('path');
@@ -180,6 +181,16 @@ app.post('/sendsol',(req,res)=>{
 
     con.query(`insert into rulare(id_user,id_pb,time,nota_rulare) 
               values(${req.body.id_user},${req.body.id_pb-9},now(),${sum(...resultat.tests)})`)
+    con.query(`select max(id_rul) a from rulare)`,(err,result,fetch)=>{
+      evaluate(req.body.cod).then((rez:String)=>{
+        var arr = JSON.parse(rez.toString());
+        console.log(arr)
+        for(var i:number=0;i<4;i++){
+            con.query(`insert into noteai values(${result.a},${i+1},${arr[i]})`);
+        }
+      })  
+    })
+    
     res.send(resultat); 
   }
   );
